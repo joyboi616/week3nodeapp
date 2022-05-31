@@ -3,7 +3,7 @@ const { MongoClient } = require ('mongodb');
 async function main() {
   const uri = "mongodb+srv://StebanPls:Contrasena@cluster0.yoay7.mongodb.net/?retryWrites=true&w=majority";
 
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri, {useUnifiedTopology: true});
 
   try {
     await client.connect();
@@ -62,7 +62,7 @@ async function findListingsWithMinimumBedroomsBathroomsAndMostRecentReviews(clie
   minimumNumberOfBathrooms = 0,
   maximumNumberOfResults = Number.MAX_SAFE_INTEGER
 } = {}) {
-  const cursor = client.db("simple_airbnb").collection("listingsAndReviews").find({
+  const cursor = client.db("sample_airbnb").collection("listingsAndReviews").find({
     bedrooms: {$gte: minimumNumberOfBedrooms},
     bathrooms: {$gte: minimumNumberOfBathrooms}
   }).sort({last_review: -1})
@@ -88,7 +88,7 @@ async function findListingsWithMinimumBedroomsBathroomsAndMostRecentReviews(clie
   }
 
 async function findOneListingByName(client, nameOfListing) {
-  const result = await client.db("simple_airbnb").collection("listingsAndReviews").findOne({name: nameOfListing});
+  const result = await client.db("sample_airbnb").collection("listingsAndReviews").findOne({name: nameOfListing});
 
   if (result) {
     console.log(`Found a listing in the collection with the name '${nameOfListing}'`);
@@ -99,7 +99,7 @@ async function findOneListingByName(client, nameOfListing) {
 }
 
 async function createMultipleListings(client, newListings) {
-  const result = await client.db("simple_airbnb").collection("listingsAndReviews").insertMany(newListings);
+  const result = await client.db("sample_airbnb").collection("listingsAndReviews").insertMany(newListings);
 
   console.log(`${result.insertedCount} new listings created with the following id(s): `);
   console.log(result.insertedIds);
