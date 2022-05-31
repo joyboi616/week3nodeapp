@@ -1,7 +1,7 @@
 const { MongoClient } = require ('mongodb');
 
 async function main() {
-  const uri = "mongodb+srv://StebanPls:Contraseña@cluster0.yoay7.mongodb.net/?retryWrites=true&w=majority";
+  const uri = "mongodb+srv://StebanPls:Contrasena@cluster0.yoay7.mongodb.net/?retryWrites=true&w=majority";
 
   const client = new MongoClient(uri);
 
@@ -43,9 +43,9 @@ async function main() {
   /* await findOneListingByName(client, "Infinite Views"); */
 
   await findListingsWithMinimumBedroomsBathroomsAndMostRecentReviews(client, {
-    minimumNumberOfBedrooms: 4,
-    minimumNumberOfBathrooms: 2,
-    maximumNumberOfResults: 45
+    minimumNumberOfBedrooms: 0,
+    minimumNumberOfBathrooms: 0,
+    maximumNumberOfResults: 5
   });
 
   } catch (e) {
@@ -65,7 +65,7 @@ async function findListingsWithMinimumBedroomsBathroomsAndMostRecentReviews(clie
   const cursor = client.db("simple_airbnb").collection("listingsAndReviews").find({
     bedrooms: {$gte: minimumNumberOfBedrooms},
     bathrooms: {$gte: minimumNumberOfBathrooms}
-  }).sort({ last_review: -1 })
+  }).sort({last_review: -1})
   .limit(maximumNumberOfResults);
 
     const results = await cursor.toArray();
@@ -73,14 +73,14 @@ async function findListingsWithMinimumBedroomsBathroomsAndMostRecentReviews(clie
     if (results.length > 0) {
       console.log(`Found listing(s) with at least ${minimumNumberOfBedrooms} bedrooms and ${minimumNumberOfBathrooms} bathrooms:`);
       results.forEach((result, i) => {
-        const date = new Date(result.last_review).toDateString();
+        date = new Date(result.last_review).toDateString();
 
         console.log();
         console.log(`${i + 1}. name: ${result.name}`);
         console.log(`   _id: ${result._id}`);
         console.log(`   bedrooms: ${result.bedrooms}`);
         console.log(`   bathrooms: ${result.bathrooms}`);
-        console.log(`   most recent review date: ${date}`);
+        console.log(`   most recent review date: ${new Date(result.last_review).toDateString()}`);
       });
     } else {
         console.log(`No listings found with at least ${minimumNumberOfBedrooms} bedrooms and ${minimumNumberOfBathrooms} bathrooms`);
