@@ -9,7 +9,7 @@ async function main() {
   try {
     await client.connect();
 
-    // to see all list databases in the cluster
+    // To see all list databases in the cluster
     /* await listDatabases(client); */
 
     // Find One Listing
